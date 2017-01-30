@@ -1,3 +1,4 @@
+
 class User < ApplicationRecord
               attr_accessor :remember_token       # NEW LINE
 
@@ -34,3 +35,15 @@ class User < ApplicationRecord
               update_attribute(:remember_digest, nil)
            end  
      end
+
+ class User < ApplicationRecord
+      has_many :microposts, dependent: :destroy     # NEW LINE
+      before_save { self.email = email.downcase }
+      validates :name, presence: true, length: { in: 9..30 }
+     
+      # NEW METHOD
+      def feed
+        Micropost.where("user_id = ?", id)
+      end  
+ end
+ User microposting feature
